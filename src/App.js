@@ -1,103 +1,54 @@
-
-
+//建議把外部的元件或方法寫在最前面
+import Navbar from "./components/Navbar";
+import Products from "./components/Products";
+import Cart from "./components/Cart";
+import { CartContext } from "./store";
+import { useReducer } from "react";
 function App() {
+  //callbackfunction,預設狀態
+  const cartReducer = useReducer((state, action) => {
+    const cartList=[...state.cartList];
+    //#1.先取得當前購物車目標品項的索引 沒有就會得到-1
+    const index=cartList.findIndex((item)=>item.id===action.payload.id);
+    console.log(index);
+    console.log(action);
+    switch (action.type) {
+      case 'ADD_TO_CART':
+        if(index===-1){
+          //還未加入到購物車內
+          cartList.push(action.payload);  
+        }else{
+          //當前購物車的項目與加入的項目一致
+          cartList[index].quantity+=action.payload.quantity;
+        }
+        
+        return {
+          ...state,
+          cartList,
+        }
+      default:
+        return state;
+    }
+  }, {
+    cartList: [],
+  });
   return (
-    <div className="App">
-      <nav className="navbar bg-body-tertiary">
-        <div className="container-fluid">
-            <span className="navbar-brand">甜點蛋糕店</span>
-            <button className="btn btn-outline-dark position-relative" type="submit">
-              購物車<span className="badge rounded-pill text-bg-danger position-absolute top-0 start-100 translate-middle">9</span></button>
-        </div>
-      </nav>
+    // <div className="App">
+    <CartContext.Provider value={cartReducer}>
+      <Navbar></Navbar>
       <div className="container mt-4">
         {/*外層格線*/}
         <div className="row">
           <div className="col-md-7">
-            <div className="row row-cols-3 g-3">
-              <div className="col">
-                <div className="card" >
-                  <img src="https://images.unsplash.com/photo-1682685797140-c17807f8f217?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D" className="card-img-top" alt="..."/>
-                  <div className="card-body">
-                    <h6 className="card-title">全蔬食健康餐
-                      <span className="float-end">NT$20</span>
-                    </h6>
-                    <button  className="btn btn-outline-primary w-100" type="button">購物車</button>
-                  </div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="card" >
-                  <img src="https://images.unsplash.com/photo-1682685797140-c17807f8f217?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D" className="card-img-top" alt="..."/>
-                  <div className="card-body">
-                    <h6 className="card-title">全蔬食健康餐
-                      <span className="float-end">NT$ 20</span>
-                    </h6>
-                    <button  className="btn btn-outline-primary w-100" type="button">購物車</button>
-                  </div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="card" >
-                  <img src="https://images.unsplash.com/photo-1682685797140-c17807f8f217?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D" className="card-img-top" alt="..."/>
-                  <div className="card-body">
-                    <h6 className="card-title">全蔬食健康餐
-                      <span className="float-end">NT$ 20</span>
-                    </h6>
-                    <button  className="btn btn-outline-primary w-100" type="button">購物車</button>
-                  </div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="card" >
-                  <img src="https://images.unsplash.com/photo-1682685797140-c17807f8f217?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D" className="card-img-top" alt="..."/>
-                  <div className="card-body">
-                    <h6 className="card-title">全蔬食健康餐
-                      <span className="float-end">NT$ 20</span>
-                    </h6>
-                    <button  className="btn btn-outline-primary w-100" type="button">購物車</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Products></Products>
           </div>
           <div className="col-md-5">
-            <div className="bg-light p-3">
-            <table className="table align-middle">
-                <tbody>
-                  <tr>
-                    <td>
-                      <a  href="#">x</a>
-                    </td>
-                    <td>
-                      <img src="" alt=""/>
-                    </td>
-                    <td>全蔬食健康餐
-                      <br/>
-                      <small className="text-muted">NT$ 220</small>
-                    </td>
-                    <td>
-                      <select name="" id="" className="form-select"></select>
-                    </td>
-                    <td className="text-end">
-                      NT$ 224
-                    </td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={5} className="text-end">
-                      總金額 NT$ 440
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+            <Cart></Cart>
           </div>
         </div>
 
       </div>
-    </div>
+    </CartContext.Provider>
   );
 }
 
