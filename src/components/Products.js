@@ -12,7 +12,7 @@ export default function Products(){
               <img src={product.img} className="card-img-top" alt="..."/>
               <div className="card-body">
                 <h6 className="card-title">{product.title}
-                  <span className="float-end">{product.price}</span>
+                  <span className="float-end">NT$ {product.price}</span>
                 </h6>
                 <button  className="btn btn-outline-primary w-100" type="button"
                 onClick={()=>{
